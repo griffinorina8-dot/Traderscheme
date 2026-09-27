@@ -7,112 +7,211 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:#0b1220;
+  background:#07101f;
   color:#fff;
 }
+
 header{
-  background:#111c31;
-  padding:18px 20px;
+  background:#101c31;
+  padding:18px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  border-bottom:1px solid #263550;
+  border-bottom:1px solid #263754;
 }
-.logo{font-size:22px;font-weight:bold}
+
+.logo{
+  font-size:22px;
+  font-weight:bold;
+}
+
 .badge{
-  background:#243b63;
+  background:#253b60;
   padding:7px 12px;
   border-radius:20px;
   font-size:12px;
 }
+
 .container{
-  max-width:1000px;
+  max-width:1050px;
   margin:auto;
   padding:20px;
 }
+
 .notice{
-  background:#18263d;
-  border:1px solid #30476b;
+  background:#13243d;
+  border:1px solid #2d4569;
   padding:15px;
   border-radius:12px;
   margin-bottom:20px;
   line-height:1.5;
 }
+
 .balance{
-  background:#13233c;
+  background:#13243d;
   padding:20px;
   border-radius:15px;
   margin-bottom:20px;
 }
-.balance small{color:#9fb0c9}
-.balance h1{margin:8px 0;font-size:34px}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
+
+.balance small{
+  color:#9baac0;
 }
-.card{
-  background:#111c31;
-  padding:20px;
+
+.balance h1{
+  margin:8px 0;
+  font-size:34px;
+}
+
+.market{
+  background:#101c31;
+  border:1px solid #263754;
   border-radius:15px;
-  border:1px solid #243550;
+  padding:18px;
 }
-.card h3{margin-top:0}
+
+.market-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.market-name{
+  font-size:20px;
+  font-weight:bold;
+}
+
 .price{
   font-size:28px;
   font-weight:bold;
-  margin:15px 0;
 }
+
+.change{
+  font-size:14px;
+}
+
+.chart{
+  width:100%;
+  height:330px;
+  margin-top:20px;
+  background:#091425;
+  border-radius:12px;
+  border:1px solid #223452;
+  overflow:hidden;
+}
+
+canvas{
+  width:100%;
+  height:100%;
+}
+
+.controls{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+  margin-top:20px;
+}
+
+.control{
+  background:#101c31;
+  padding:18px;
+  border-radius:15px;
+  border:1px solid #263754;
+}
+
+input{
+  width:100%;
+  padding:13px;
+  margin:8px 0 12px;
+  border-radius:8px;
+  border:1px solid #354b6b;
+  background:#07101f;
+  color:white;
+}
+
 .buttons{
   display:flex;
   gap:10px;
 }
+
 button{
   flex:1;
   border:0;
-  padding:13px;
+  padding:14px;
   border-radius:9px;
   color:white;
   font-weight:bold;
   cursor:pointer;
+  font-size:15px;
 }
-.buy{background:#16834b}
-.sell{background:#b93646}
-button:hover{opacity:.85}
-input,select{
-  width:100%;
-  padding:12px;
-  margin:8px 0 12px;
-  border-radius:8px;
-  border:1px solid #344968;
-  background:#0b1220;
-  color:white;
+
+.buy{
+  background:#13864d;
 }
+
+.sell{
+  background:#c33b4b;
+}
+
+button:hover{
+  opacity:.85;
+}
+
+.card{
+  background:#101c31;
+  padding:20px;
+  border-radius:15px;
+  border:1px solid #263754;
+  margin-top:20px;
+}
+
+.green{
+  color:#35d889;
+}
+
+.red{
+  color:#ff6473;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:15px;
 }
+
 th,td{
-  padding:12px 8px;
-  border-bottom:1px solid #263550;
+  padding:11px 7px;
+  border-bottom:1px solid #263754;
   text-align:left;
 }
+
 .empty{
-  color:#8fa0b9;
-  padding:15px 0;
+  color:#8b9ab0;
+  padding:10px 0;
 }
+
 footer{
   text-align:center;
-  color:#8191a9;
+  color:#8291a7;
   padding:30px 15px;
   font-size:13px;
 }
-.green{color:#39d98a}
-.red{color:#ff6675}
+
+@media(max-width:700px){
+  .controls{
+    grid-template-columns:1fr;
+  }
+
+  .chart{
+    height:270px;
+  }
+}
 </style>
 </head>
 
@@ -126,221 +225,543 @@ footer{
 <div class="container">
 
   <div class="notice">
-    <strong>Demo Trading Only</strong><br>
-    This platform uses virtual funds for educational purposes.
-    No real money is deposited, invested, or withdrawn through this page.
+    <strong>Demo Trading Platform</strong><br>
+    This dashboard uses virtual funds for learning and practice.
+    No real deposits or withdrawals are processed here.
   </div>
 
   <div class="balance">
     <small>Virtual Account Balance</small>
     <h1 id="balance">$10,000.00</h1>
-    <span id="totalPL">Total P/L: $0.00</span>
+    <span id="pl">Total P/L: $0.00</span>
   </div>
 
-  <div class="grid">
+  <div class="market">
 
-    <div class="card">
-      <h3>BTC / USD</h3>
-      <div class="price" id="btc">$65,000</div>
+    <div class="market-top">
 
-      <label>Trade Amount</label>
-      <input id="btcAmount" type="number" value="100">
-
-      <div class="buttons">
-        <button class="buy" onclick="trade('BTC/USD','BUY','btcAmount','btc')">
-          BUY
-        </button>
-        <button class="sell" onclick="trade('BTC/USD','SELL','btcAmount','btc')">
-          SELL
-        </button>
+      <div>
+        <div class="market-name">BTC / USD</div>
+        <div class="change green" id="change">
+          +0.00%
+        </div>
       </div>
+
+      <div class="price" id="price">
+        $65,000.00
+      </div>
+
     </div>
 
-    <div class="card">
-      <h3>EUR / USD</h3>
-      <div class="price" id="eur">1.1750</div>
-
-      <label>Trade Amount</label>
-      <input id="eurAmount" type="number" value="100">
-
-      <div class="buttons">
-        <button class="buy" onclick="trade('EUR/USD','BUY','eurAmount','eur')">
-          BUY
-        </button>
-        <button class="sell" onclick="trade('EUR/USD','SELL','eurAmount','eur')">
-          SELL
-        </button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>GOLD / USD</h3>
-      <div class="price" id="gold">$3,750</div>
-
-      <label>Trade Amount</label>
-      <input id="goldAmount" type="number" value="100">
-
-      <div class="buttons">
-        <button class="buy" onclick="trade('GOLD/USD','BUY','goldAmount','gold')">
-          BUY
-        </button>
-        <button class="sell" onclick="trade('GOLD/USD','SELL','goldAmount','gold')">
-          SELL
-        </button>
-      </div>
+    <div class="chart">
+      <canvas id="chart"></canvas>
     </div>
 
   </div>
 
-  <div class="card" style="margin-top:20px">
-    <h3>Demo Trade History</h3>
+  <div class="controls">
+
+    <div class="control">
+
+      <h3>BUY</h3>
+
+      <p>
+        Use BUY when you expect the price to rise.
+      </p>
+
+      <label>Virtual trade amount</label>
+
+      <input
+        id="buyAmount"
+        type="number"
+        value="100"
+        min="1"
+      >
+
+      <button class="buy" onclick="placeTrade('BUY')">
+        BUY BTC/USD
+      </button>
+
+    </div>
+
+    <div class="control">
+
+      <h3>SELL</h3>
+
+      <p>
+        Use SELL when you expect the price to fall.
+      </p>
+
+      <label>Virtual trade amount</label>
+
+      <input
+        id="sellAmount"
+        type="number"
+        value="100"
+        min="1"
+      >
+
+      <button class="sell" onclick="placeTrade('SELL')">
+        SELL BTC/USD
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h2>How to Trade</h2>
+
+    <p>
+      <strong>1. Watch the graph</strong><br>
+      The graph shows simulated BTC/USD price movement.
+    </p>
+
+    <p>
+      <strong>2. Choose BUY or SELL</strong><br>
+      BUY represents expecting the price to rise.
+      SELL represents expecting the price to fall.
+    </p>
+
+    <p>
+      <strong>3. Enter your virtual amount</strong><br>
+      Choose how much of your $10,000 demo balance you want to use.
+    </p>
+
+    <p>
+      <strong>4. Place the demo trade</strong><br>
+      Your simulated trade will appear in the history below.
+    </p>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Trade History</h2>
 
     <div id="history" class="empty">
       No trades yet.
     </div>
+
   </div>
 
 </div>
 
 <footer>
   TraderScheme © 2026<br>
-  Educational demo only. Trading financial markets involves substantial risk.
+  Educational demo only. Financial markets involve significant risk.
 </footer>
+
 
 <script>
 
 let balance = 10000;
 let totalPL = 0;
+
+let currentPrice = 65000;
+
+let prices = [];
+
 let trades = [];
 
-const prices = {
-  btc:65000,
-  eur:1.1750,
-  gold:3750
-};
 
-function money(value){
-  return "$" + Number(value).toLocaleString(
-    "en-US",
-    {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    }
-  );
+/* Create simulated starting graph data */
+
+for(let i = 0; i < 45; i++){
+
+  currentPrice +=
+    (Math.random() - 0.48) * 700;
+
+  prices.push(currentPrice);
+
 }
 
-function updateBalance(){
 
-  document.getElementById("balance").textContent =
-    money(balance);
+/* Canvas graph */
 
-  const pl = document.getElementById("totalPL");
+const canvas =
+  document.getElementById("chart");
+
+const ctx =
+  canvas.getContext("2d");
+
+
+function resizeCanvas(){
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  canvas.width = rect.width * devicePixelRatio;
+  canvas.height = rect.height * devicePixelRatio;
+
+  ctx.scale(
+    devicePixelRatio,
+    devicePixelRatio
+  );
+
+  drawChart();
+
+}
+
+
+function drawChart(){
+
+  const width =
+    canvas.clientWidth;
+
+  const height =
+    canvas.clientHeight;
+
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /* Grid */
+
+  ctx.strokeStyle =
+    "#1b2c47";
+
+  ctx.lineWidth = 1;
+
+  for(let i = 1; i < 6; i++){
+
+    const y =
+      (height / 6) * i;
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,y);
+
+    ctx.lineTo(width,y);
+
+    ctx.stroke();
+
+  }
+
+
+  if(prices.length < 2) return;
+
+
+  let min =
+    Math.min(...prices);
+
+  let max =
+    Math.max(...prices);
+
+  let range =
+    max - min || 1;
+
+
+  /* Price line */
+
+  ctx.beginPath();
+
+  prices.forEach((p,i)=>{
+
+    const x =
+      (i/(prices.length-1)) * width;
+
+    const y =
+      height -
+      ((p-min)/range) *
+      (height-30) -
+      15;
+
+    if(i === 0)
+      ctx.moveTo(x,y);
+    else
+      ctx.lineTo(x,y);
+
+  });
+
+  ctx.strokeStyle =
+    "#35d889";
+
+  ctx.lineWidth = 2;
+
+  ctx.stroke();
+
+
+  /* Current price line */
+
+  const y =
+    height -
+    ((prices[prices.length-1]-min)/range) *
+    (height-30) -
+    15;
+
+  ctx.setLineDash([5,5]);
+
+  ctx.strokeStyle =
+    "#8291a7";
+
+  ctx.beginPath();
+
+  ctx.moveTo(0,y);
+
+  ctx.lineTo(width,y);
+
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+
+}
+
+
+function updateDisplay(){
+
+  document.getElementById("price")
+    .textContent =
+    "$" +
+    currentPrice.toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+
+
+  document.getElementById("balance")
+    .textContent =
+    "$" +
+    balance.toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+
+
+  const pl =
+    document.getElementById("pl");
 
   pl.textContent =
-    "Total P/L: " + money(totalPL);
+    "Total P/L: " +
+    (totalPL >= 0 ? "+" : "") +
+    "$" +
+    totalPL.toFixed(2);
 
-  pl.className = totalPL >= 0 ? "green" : "red";
+  pl.className =
+    totalPL >= 0 ? "green" : "red";
+
+
+  drawChart();
+
 }
 
-function trade(symbol, side, amountID, priceID){
 
-  const input = document.getElementById(amountID);
-  const amount = Number(input.value);
+/* Simulate price movement */
+
+setInterval(()=>{
+
+  const previous =
+    currentPrice;
+
+  currentPrice +=
+    (Math.random() - 0.5) * 450;
+
+  if(currentPrice < 50000)
+    currentPrice = 50000;
+
+  prices.push(currentPrice);
+
+  if(prices.length > 60)
+    prices.shift();
+
+
+  const percent =
+    ((currentPrice-previous) /
+    previous) * 100;
+
+
+  const change =
+    document.getElementById("change");
+
+  change.textContent =
+    (percent >= 0 ? "+" : "") +
+    percent.toFixed(2) +
+    "%";
+
+
+  change.className =
+    percent >= 0
+      ? "change green"
+      : "change red";
+
+
+  updateDisplay();
+
+},1500);
+
+
+/* Demo trade */
+
+function placeTrade(side){
+
+  const input =
+    side === "BUY"
+      ? document.getElementById("buyAmount")
+      : document.getElementById("sellAmount");
+
+  const amount =
+    Number(input.value);
+
 
   if(!amount || amount <= 0){
-    alert("Enter a valid trade amount.");
+
+    alert(
+      "Enter a valid virtual trade amount."
+    );
+
     return;
+
   }
+
 
   if(amount > balance){
-    alert("Insufficient virtual balance.");
+
+    alert(
+      "Your virtual balance is insufficient."
+    );
+
     return;
+
   }
 
-  const entryPrice = prices[priceID];
 
   /*
-    This is a simulated result.
-    It is NOT a real market order.
+    Simulated result only.
+    This does not represent a real market order.
   */
 
-  const randomMove =
+  const movement =
     (Math.random() * 0.04) - 0.02;
 
   const direction =
     side === "BUY" ? 1 : -1;
 
   const profit =
-    amount * randomMove * direction;
+    amount * movement * direction;
+
 
   balance += profit;
+
   totalPL += profit;
 
+
   trades.unshift({
-    symbol,
+
+    time:
+      new Date().toLocaleTimeString(),
+
     side,
+
     amount,
-    entryPrice,
-    profit,
-    time:new Date().toLocaleTimeString()
+
+    price:
+      currentPrice,
+
+    profit
+
   });
 
-  updateBalance();
+
   displayHistory();
+
+  updateDisplay();
+
 }
+
 
 function displayHistory(){
 
-  const history =
+  const box =
     document.getElementById("history");
 
+
   if(trades.length === 0){
-    history.innerHTML =
+
+    box.innerHTML =
       "No trades yet.";
+
     return;
+
   }
 
+
   let html = `
-    <div style="overflow-x:auto">
-    <table>
-      <tr>
-        <th>Time</th>
-        <th>Asset</th>
-        <th>Side</th>
-        <th>Amount</th>
-        <th>Result</th>
-      </tr>
+  <div style="overflow-x:auto">
+
+  <table>
+
+  <tr>
+    <th>Time</th>
+    <th>Side</th>
+    <th>Amount</th>
+    <th>Price</th>
+    <th>P/L</th>
+  </tr>
   `;
 
-  trades.forEach(t => {
 
-    const resultClass =
-      t.profit >= 0 ? "green" : "red";
+  trades.forEach(t=>{
+
+    const cls =
+      t.profit >= 0
+        ? "green"
+        : "red";
+
 
     html += `
-      <tr>
-        <td>${t.time}</td>
-        <td>${t.symbol}</td>
-        <td>${t.side}</td>
-        <td>${money(t.amount)}</td>
-        <td class="${resultClass}">
-          ${t.profit >= 0 ? "+" : ""}
-          ${money(t.profit)}
-        </td>
-      </tr>
+
+    <tr>
+
+      <td>${t.time}</td>
+
+      <td>${t.side}</td>
+
+      <td>$${t.amount.toFixed(2)}</td>
+
+      <td>$${t.price.toFixed(2)}</td>
+
+      <td class="${cls}">
+        ${t.profit >= 0 ? "+" : ""}
+        $${t.profit.toFixed(2)}
+      </td>
+
+    </tr>
+
     `;
 
   });
 
+
   html += `
-    </table>
-    </div>
+  </table>
+  </div>
   `;
 
-  history.innerHTML = html;
+
+  box.innerHTML = html;
+
 }
 
-updateBalance();
+
+window.addEventListener(
+  "resize",
+  resizeCanvas
+);
+
+resizeCanvas();
+
+updateDisplay();
 
 </script>
 
