@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TraderScheme - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .box {
+      width: 90%;
+      max-width: 400px;
+      background: #151c32;
+      padding: 25px;
+      border-radius: 15px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #0d1325;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #20c997;
+      color: white;
+      font-size: 16px;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 15px;
+      color: #aaa;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <h1>TraderScheme</h1>
+
+  <div id="login">
+    <h2>Login</h2>
+
+    <input id="loginEmail" type="email" placeholder="Email">
+
+    <input id="loginPassword" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <div class="switch" onclick="showRegister()">
+      Don't have an account? Register
+    </div>
+  </div>
+
+  <div id="register" style="display:none;">
+    <h2>Create Account</h2>
+
+    <input id="name" type="text" placeholder="Full name">
+
+    <input id="email" type="email" placeholder="Email">
+
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="register()">Register</button>
+
+    <div class="switch" onclick="showLogin()">
+      Already have an account? Login
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+function showRegister() {
+  document.getElementById("login").style.display = "none";
+  document.getElementById("register").style.display = "block";
+}
+
+function showLogin() {
+  document.getElementById("register").style.display = "none";
+  document.getElementById("login").style.display = "block";
+}
+
+function register() {
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!name || !email || !password) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  localStorage.setItem("demoUser", JSON.stringify({
+    name: name,
+    email: email,
+    password: password,
+    balance: 10000
+  }));
+
+  alert("Demo account created successfully.");
+
+  window.location.href = "trade.html";
+}
+
+function login() {
+
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  const user = JSON.parse(localStorage.getItem("demoUser"));
+
+  if (!user) {
+    alert("No demo account found. Please register first.");
+    return;
+  }
+
+  if (email === user.email && password === user.password) {
+    window.location.href = "trade.html";
+  } else {
+    alert("Incorrect login details.");
+  }
+}
+
+</script>
+
+</body>
+</html>
